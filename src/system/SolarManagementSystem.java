@@ -16,8 +16,11 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
     private ArrayList<HomeownerRecord> records;
 
     private static int nextUserId = 1;
+    private static final String ADMIN_CODE_FILE = "data/verification.txt";
+    private static final String DEFAULT_ADMIN_CODE = "12345678";
     private String adminCodeHash;
-  
+
+
 
 
     Scanner scanner = new Scanner(System.in);
@@ -27,7 +30,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         towns = new HashMap<>();
         panels = new ArrayList<>();
         records = new ArrayList<>();
-        adminCodeHash = hashPassword("12345678");
+        loadAdminCode();
     }
 
     public void saveToFile(String filename) throws Exception {
@@ -170,8 +173,16 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
     }
 
     public void changeAdminCode(String newCode) {
+
         adminCodeHash = hashPassword(newCode);
+
+        try (FileWriter writer = new FileWriter(ADMIN_CODE_FILE)) {
+            writer.write(adminCodeHash);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     public User findUser(int id) {
         return users.get(id);
@@ -421,6 +432,33 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         );
         return true;
     }
+    private void loadAdminCode() {
+
+        File file = new File(ADMIN_CODE_FILE);
+
+        try {
+            // First run: file does not exist
+            if (!file.exists()) {
+                adminCodeHash = hashPassword(DEFAULT_ADMIN_CODE);
+                try (FileWriter writer = new FileWriter(file)) {
+                    writer.write(adminCodeHash);
+                }
+                return;
+            }
+
+            // Normal runs: load existing hash
+            try (Scanner scanner = new Scanner(file)) {
+                if (scanner.hasNextLine()) {
+                    adminCodeHash = scanner.nextLine().trim();
+                }
+            }
+
+        } catch (Exception e) {
+            // Emergency fallback
+            adminCodeHash = hashPassword(DEFAULT_ADMIN_CODE);
+        }
+    }
+
 
 
 
