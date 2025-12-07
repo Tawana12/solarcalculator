@@ -2,7 +2,6 @@ package pages.admin;
 
 import java.awt.*;
 import javax.swing.*;
-
 import pages.auth.LoginPage;
 import system.*;
 
@@ -32,7 +31,7 @@ public class AdminPage extends JFrame {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // ========== COMPANY CODE ==========
+        // ================= COMPANY CODE =================
         JPanel codePanel = createSectionPanel("Company Verification");
 
         JPasswordField adminCodeField = new JPasswordField(15);
@@ -44,21 +43,84 @@ public class AdminPage extends JFrame {
         centerPanel.add(codePanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        // ========== ADD TOWN ==========
+        // ================= TOWN SOLAR DATA =================
         JPanel townPanel = createSectionPanel("Town Solar Data");
 
-        JTextField townField = new JTextField(15);
-        JTextField sunField = new JTextField(15);
-        JButton addTownBtn = new JButton("Add Town");
+        JRadioButton addTownRadio = new JRadioButton("Add new town", true);
+        JRadioButton updateTownRadio = new JRadioButton("Update existing town");
 
-        addRow(townPanel, 0, "Town Name:", townField);
-        addRow(townPanel, 1, "Avg Sun Hours:", sunField);
-        addButtonRow(townPanel, 2, addTownBtn);
+        ButtonGroup townGroup = new ButtonGroup();
+        townGroup.add(addTownRadio);
+        townGroup.add(updateTownRadio);
+
+        JTextField townField = new JTextField(15);
+        JComboBox<String> townBox = new JComboBox<>(system.getAllTownNames());
+        townBox.setEnabled(false);
+
+        JTextField sunField = new JTextField(15);
+        JButton saveTownBtn = new JButton("Save");
+
+        addRow(townPanel, 0, "", addTownRadio);
+        addRow(townPanel, 1, "Town Name:", townField);
+        addRow(townPanel, 2, "", updateTownRadio);
+        addRow(townPanel, 3, "Select Town:", townBox);
+        addRow(townPanel, 4, "Avg Sun Hours:", sunField);
+        addButtonRow(townPanel, 5, saveTownBtn);
 
         centerPanel.add(townPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        // ========== RESET USER ==========
+        addTownRadio.addActionListener(e -> {
+            townField.setEnabled(true);
+            townBox.setEnabled(false);
+        });
+
+        updateTownRadio.addActionListener(e -> {
+            townField.setEnabled(false);
+            townBox.setEnabled(true);
+        });
+
+        // ================= PANEL SPECIFICATIONS =================
+        JPanel panelSpecPanel = createSectionPanel("Solar Panel Specifications");
+
+        JRadioButton addPanelRadio = new JRadioButton("Add new panel", true);
+        JRadioButton updatePanelRadio = new JRadioButton("Update existing panel");
+
+        ButtonGroup panelGroup = new ButtonGroup();
+        panelGroup.add(addPanelRadio);
+        panelGroup.add(updatePanelRadio);
+
+        JTextField panelNameField = new JTextField(15);
+        JComboBox<String> panelBox = new JComboBox<>();
+        for (PanelSpec p : system.getPanels()) {
+            panelBox.addItem(p.getName());
+        }
+        panelBox.setEnabled(false);
+
+        JTextField panelWattField = new JTextField(15);
+        JButton savePanelBtn = new JButton("Save");
+
+        addRow(panelSpecPanel, 0, "", addPanelRadio);
+        addRow(panelSpecPanel, 1, "Panel Name:", panelNameField);
+        addRow(panelSpecPanel, 2, "", updatePanelRadio);
+        addRow(panelSpecPanel, 3, "Select Panel:", panelBox);
+        addRow(panelSpecPanel, 4, "Wattage (W):", panelWattField);
+        addButtonRow(panelSpecPanel, 5, savePanelBtn);
+
+        centerPanel.add(panelSpecPanel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        addPanelRadio.addActionListener(e -> {
+            panelNameField.setEnabled(true);
+            panelBox.setEnabled(false);
+        });
+
+        updatePanelRadio.addActionListener(e -> {
+            panelNameField.setEnabled(false);
+            panelBox.setEnabled(true);
+        });
+
+        // ================= RESET USER =================
         JPanel resetPanel = createSectionPanel("Reset User Account");
 
         JTextField userIdField = new JTextField(15);
@@ -70,6 +132,30 @@ public class AdminPage extends JFrame {
         addButtonRow(resetPanel, 2, resetUserBtn);
 
         centerPanel.add(resetPanel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        // ================= TOWN STATISTICS =================
+        JPanel statsPanel = createSectionPanel("Town Statistics");
+
+        JComboBox<String> statsTownBox = new JComboBox<>(system.getAllTownNames());
+        JButton viewStatsBtn = new JButton("View Stats");
+
+        JLabel sunLabel = new JLabel("-");
+        JLabel installLabel = new JLabel("-");
+        JLabel capacityLabel = new JLabel("-");
+        JLabel outputLabel = new JLabel("-");
+
+        addRow(statsPanel, 0, "Select Town:", statsTownBox);
+        addButtonRow(statsPanel, 1, viewStatsBtn);
+        addRow(statsPanel, 2, "Avg Sun Hours:", sunLabel);
+        addRow(statsPanel, 3, "Installations:", installLabel);
+        addRow(statsPanel, 4, "Total Capacity (W):", capacityLabel);
+        addRow(statsPanel, 5, "Est. Daily Output (kWh):", outputLabel);
+
+        JPanel eastPanel = new JPanel(new BorderLayout());
+        eastPanel.setPreferredSize(new Dimension(380, 0));
+        eastPanel.add(statsPanel, BorderLayout.NORTH);
+        mainPanel.add(eastPanel, BorderLayout.EAST);
 
         JButton backBtn = new JButton("Back");
 
@@ -80,33 +166,46 @@ public class AdminPage extends JFrame {
 
         mainPanel.add(southPanel, BorderLayout.SOUTH);
 
-        // ========== ACTIONS ==========
+        // ================= ACTIONS =================
         updateCodeBtn.addActionListener(e -> {
             String newCode = new String(adminCodeField.getPassword());
-
-            if (newCode.length() < 6) {
-                JOptionPane.showMessageDialog(this, "Code must be at least 6 characters");
-                return;
-            }
-
+            if (newCode.length() < 6) return;
             system.changeAdminCode(newCode);
-            JOptionPane.showMessageDialog(this, "Verification code updated");
             adminCodeField.setText("");
         });
 
-        addTownBtn.addActionListener(e -> {
+        saveTownBtn.addActionListener(e -> {
             try {
-                system.addTown(
-                        townField.getText().trim(),
-                        Double.parseDouble(sunField.getText().trim())
-                );
+                String townName = addTownRadio.isSelected()
+                        ? townField.getText().trim()
+                        : townBox.getSelectedItem().toString();
+
+                double sunHours = Double.parseDouble(sunField.getText().trim());
+
+                system.addTown(townName, sunHours);
                 system.saveToFile("data/towns.txt");
-                JOptionPane.showMessageDialog(this, "Town added successfully");
+
                 townField.setText("");
                 sunField.setText("");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Invalid town data");
-            }
+
+            } catch (Exception ignored) {}
+        });
+
+        savePanelBtn.addActionListener(e -> {
+            try {
+                String panelName = addPanelRadio.isSelected()
+                        ? panelNameField.getText().trim()
+                        : panelBox.getSelectedItem().toString();
+
+                double wattage = Double.parseDouble(panelWattField.getText().trim());
+
+                system.addPanel(panelName, wattage);
+                system.saveToFile("data/panels.txt");
+
+                panelNameField.setText("");
+                panelWattField.setText("");
+
+            } catch (Exception ignored) {}
         });
 
         resetUserBtn.addActionListener(e -> {
@@ -114,22 +213,23 @@ public class AdminPage extends JFrame {
                 int id = Integer.parseInt(userIdField.getText().trim());
                 String newPass = new String(newPasswordField.getPassword());
 
-                if (newPass.length() < 6) {
-                    JOptionPane.showMessageDialog(this, "Password too short");
-                    return;
-                }
-
                 if (system.resetUserPassword(id, newPass)) {
                     system.saveToFile("data/users.txt");
-                    JOptionPane.showMessageDialog(this, "User password reset");
                     userIdField.setText("");
                     newPasswordField.setText("");
-                } else {
-                    JOptionPane.showMessageDialog(this, "User not found");
                 }
+            } catch (Exception ignored) {}
+        });
 
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Invalid input");
+        viewStatsBtn.addActionListener(e -> {
+            String townName = statsTownBox.getSelectedItem().toString();
+            TownSolar town = system.getTown(townName);
+
+            if (town != null) {
+                sunLabel.setText(String.valueOf(town.getAvgSunHours()));
+                installLabel.setText(String.valueOf(town.getInstallationCount()));
+                capacityLabel.setText(String.valueOf(town.getTotalCapacity()));
+                outputLabel.setText(String.format("%.2f", town.getEstimatedDailyOutput()));
             }
         });
 
@@ -141,7 +241,6 @@ public class AdminPage extends JFrame {
         setVisible(true);
     }
 
-    // ================= HELPERS =================
     private JPanel createSectionPanel(String title) {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createTitledBorder(title));
@@ -153,7 +252,8 @@ public class AdminPage extends JFrame {
         gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        gbc.gridx = 0; gbc.gridy = row;
+        gbc.gridx = 0;
+        gbc.gridy = row;
         panel.add(new JLabel(label), gbc);
 
         gbc.gridx = 1;
@@ -163,7 +263,8 @@ public class AdminPage extends JFrame {
     private void addButtonRow(JPanel panel, int row, JButton button) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 8, 8, 8);
-        gbc.gridx = 1; gbc.gridy = row;
+        gbc.gridx = 1;
+        gbc.gridy = row;
         panel.add(button, gbc);
     }
 }

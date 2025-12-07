@@ -1,25 +1,48 @@
 package system;
 
+import java.util.ArrayList;
+
 public class TownSolar {
 
-    private String town;
-    private double sunHours;
+    private String townName;
+    private double avgSunHours;
+    private ArrayList<HomeownerRecord> records;
 
-    public TownSolar(String town, double sunHours) {
-        this.town = town;
-        this.sunHours = sunHours;
+    public TownSolar(String townName, double avgSunHours) {
+        this.townName = townName;
+        this.avgSunHours = avgSunHours;
+        this.records = new ArrayList<>();
     }
 
-    public String getTown() {
-        return town;
+    public String getTownName() {
+        return townName;
     }
 
-    public double getSunHours() {
-        return sunHours;
+    public double getAvgSunHours() {
+        return avgSunHours;
     }
 
-    @Override
-    public String toString() {
-        return town + "," + sunHours;
+    public void setAvgSunHours(double avgSunHours) {
+        this.avgSunHours = avgSunHours;
+    }
+
+    public void addRecord(HomeownerRecord record) {
+        records.add(record);
+    }
+
+    public int getInstallationCount() {
+        return records.size();
+    }
+
+    public double getTotalCapacity() {
+        double total = 0;
+        for (HomeownerRecord r : records) {
+            total += r.getRecommendedPanels() * r.getPanelWatt();
+        }
+        return total;
+    }
+
+    public double getEstimatedDailyOutput() {
+        return (getTotalCapacity() * avgSunHours) / 1000;
     }
 }

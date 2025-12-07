@@ -1,3 +1,3 @@
 1,Test User,user@gmail.com,7823232832,Accra,HOMEOWNER,d79aeec77b3b6e6ec5f45ae5e040173380262e1ea51b38747195c3cf09a02f16
 2,Test Admin,admin@gmail.com,123445454,Accra,ADMIN,240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9
-3,Technical User,technician@gmail.com,3434930434,Accra,TECHNICIAN,f6bd91ad17bea2a88d6e3ff462d500b777d5114fe6066659faa07399f7c5d967
+3,Technical User,technician@gmail.com,3434930434,Accra,TECHNICIAN,21f6a2d60ddc87d6c32f131903504613141c9de17117654c4a43ebf9edb2c93a

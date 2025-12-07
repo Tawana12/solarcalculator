@@ -108,7 +108,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
                     int requiredPanels = Integer.parseInt(parts[index++]);
                     int maxPanelsByRoof = Integer.parseInt(parts[index++]);
                     int recommendedPanels = Integer.parseInt(parts[index++]);
-
+                    
                     HomeownerRecord r = new HomeownerRecord(
                             userId,
                             dt,
@@ -126,6 +126,11 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
                             recommendedPanels
                     );
                     records.add(r);
+                    TownSolar townObj = getTownSolar(town);
+                    if (townObj != null) {
+                        townObj.addRecord(r);
+                    }
+
                 }
             }
         }
@@ -202,9 +207,9 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
     }
 
     public void addPanel(String name, double wattage) {
+        panels.removeIf(p -> p.getName().equalsIgnoreCase(name));
         panels.add(new PanelSpec(name, wattage));
     }
-
     public int calculatePanels(double dailyKWh, double sunHours, double wattage) {
         double dailyPanelEnergy = (wattage / 1000) * sunHours * 0.75;
         return (int) Math.ceil(dailyKWh / dailyPanelEnergy);
@@ -235,7 +240,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         String[] townNames = new String[towns.size()];
         int index = 0;
         for (TownSolar town : towns.values()) {
-            townNames[index++] = town.getTown();
+            townNames[index++] = town.getTownName();
         }
         return townNames;
     }
@@ -269,7 +274,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         TownSolar t = getTownSolar(townName);
         double sunHours = 0.0;
         if (t != null) {
-            sunHours = t.getSunHours();
+            sunHours = t.getAvgSunHours();
         }
 
         int requiredPanels = calculatePanels(dailyKWh, sunHours, panelWatt);
@@ -297,6 +302,11 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         );
 
         records.add(record);
+        TownSolar town = getTownSolar(townName);
+        if (town != null) {
+            town.addRecord(record);
+        }
+
 
         return record;
     }
@@ -458,8 +468,23 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
             adminCodeHash = hashPassword(DEFAULT_ADMIN_CODE);
         }
     }
+    public String[] getAllPanelNames() {
+            String[] names = new String[panels.size()];
+            for (int i = 0; i < panels.size(); i++) {
+                names[i] = panels.get(i).getName();
+            }
+            return names;
+        }
+        public TownSolar getTown(String name) {
+            return towns.get(name.toLowerCase());
+        }
 
-
+    public void assignRecordToTown(String townName, HomeownerRecord record) {
+        TownSolar town = towns.get(townName.toLowerCase());
+        if (town != null) {
+            town.addRecord(record);
+        }
+    }
 
 
 }
