@@ -1,0 +1,5 @@
+Monocrystalline 350W,350
+Monocrystalline 400W,400
+Polycrystalline 330W,330
+Thin Film 250W,250
+Hybrid 500W,500

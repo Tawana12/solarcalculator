@@ -1,0 +1,19 @@
+Solar Recommendation Report
+---------------------------
+User ID: 1
+Date: 2025-12-07T04:24:45.699230964
+Town: Accra
+
+Roof length: 6.0 m
+Roof width: 8.0 m
+Roof area: 48.0 m^2
+Shading level (1-10): 1
+Usable roof area: 45.599999999999994 m^2
+
+Daily energy demand: 4.0 kWh
+Average sun hours: 5.5 h
+Panel wattage: 350.0 W
+
+Panels required (theoretical): 3
+Maximum panels by roof area: 26
+Recommended panels: 3

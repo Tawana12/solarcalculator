@@ -1,0 +1,5 @@
+Accra,5.5
+Kumasi,5.2
+Tamale,6.1
+Takoradi,5.0
+Cape Coast,5.3

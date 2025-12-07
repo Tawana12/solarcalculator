@@ -1,0 +1,61 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 5 0 R >>
+stream
+BT
+/F1 12 Tf
+72 720 Td
+(Solar Recommendation Report) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(User ID: 3) Tj
+0 -16 Td
+(Date: 2025-12-07T05:37:43.171204772) Tj
+0 -16 Td
+(Town: Accra) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(Roof Area: 42.0 m^2) Tj
+0 -16 Td
+(Usable Area: 39.9 m^2) Tj
+0 -16 Td
+(Shading Level: 1) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(Daily Energy Demand: 4.0 kWh) Tj
+0 -16 Td
+(Sun Hours: 5.5) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(Panel Wattage: 350.0 W) Tj
+0 -16 Td
+(Required Panels: 3) Tj
+0 -16 Td
+(Recommended Panels: 3) Tj
+ET
+endstream
+endobj
+5 0 obj
+257
+endobj
+xref
+0 6
+0000000000 65535 f 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+0
+%%EOF
