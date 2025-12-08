@@ -3,7 +3,6 @@ package pages.technician;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
-
 import pages.auth.LoginPage;
 import system.*;
 
@@ -19,6 +18,7 @@ public class TechnicianPage extends JFrame {
     private JTextField shadingLossField;
 
     private JComboBox<String> townBox;
+    private JComboBox<String> panelBox;
     private JComboBox<HomeownerRecord> recordBox;
 
     private JTextArea resultArea;
@@ -46,7 +46,6 @@ public class TechnicianPage extends JFrame {
         JPanel centerPanel = new JPanel(new BorderLayout(12, 12));
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // ================= FORM =================
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(6, 6, 6, 6);
@@ -88,33 +87,32 @@ public class TechnicianPage extends JFrame {
         townBox = new JComboBox<>(system.getAllTownNames());
         formPanel.add(townBox, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 2;
+        gbc.gridx = 0; gbc.gridy = 6;
+        formPanel.add(new JLabel("Panel Type:"), gbc);
+        gbc.gridx = 1;
+        panelBox = new JComboBox<>(system.getAllPanelNames());
+        formPanel.add(panelBox, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 7; gbc.gridwidth = 2;
         JButton calculateBtn = new JButton("Calculate");
         formPanel.add(calculateBtn, gbc);
 
         centerPanel.add(formPanel, BorderLayout.WEST);
 
-        // ================= RESULT =================
         resultArea = new JTextArea();
         resultArea.setEditable(false);
         resultArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
         centerPanel.add(new JScrollPane(resultArea), BorderLayout.CENTER);
 
-        // ================= BOTTOM =================
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
 
         recordBox = new JComboBox<>();
-
-        // ✅ RECORD NUMBER RENDERER (FIXED)
         recordBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
-                    JList<?> list,
-                    Object value,
-                    int index,
-                    boolean isSelected,
-                    boolean cellHasFocus) {
+                    JList<?> list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
 
                 super.getListCellRendererComponent(
                         list, value, index, isSelected, cellHasFocus);
@@ -124,10 +122,8 @@ public class TechnicianPage extends JFrame {
                             (index >= 0)
                                     ? index + 1
                                     : recordBox.getSelectedIndex() + 1;
-
                     setText("Record " + displayIndex);
                 }
-
                 return this;
             }
         });
@@ -153,7 +149,6 @@ public class TechnicianPage extends JFrame {
 
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        // ================= ACTIONS =================
         calculateBtn.addActionListener(e -> calculateManual());
 
         viewBtn.addActionListener(e -> {
@@ -197,8 +192,6 @@ public class TechnicianPage extends JFrame {
         setVisible(true);
     }
 
-    // ================= LOGIC =================
-
     private void calculateManual() {
 
         try {
@@ -208,7 +201,16 @@ public class TechnicianPage extends JFrame {
             double sunHours = Double.parseDouble(sunHoursField.getText().trim());
             double shadingLoss = Double.parseDouble(shadingLossField.getText().trim()) / 100.0;
 
-            PanelSpec panel = system.getPanels().get(0);
+            String panelName = panelBox.getSelectedItem().toString();
+            double panelWatt = 0;
+
+            for (PanelSpec p : system.getPanels()) {
+                if (p.getName().equalsIgnoreCase(panelName)) {
+                    panelWatt = p.getWattage();
+                    break;
+                }
+            }
+
             int shadingLevel = (int) Math.min(10, Math.max(1, shadingLoss * 10));
 
             lastRecord = system.calculateHomeownerSystem(
@@ -218,7 +220,7 @@ public class TechnicianPage extends JFrame {
                     shadingLevel,
                     demand,
                     townBox.getSelectedItem().toString(),
-                    panel.getWattage()
+                    panelWatt
             );
 
             system.saveToFile("data/records.txt");
@@ -231,25 +233,63 @@ public class TechnicianPage extends JFrame {
     }
 
     private void displayResult(HomeownerRecord r) {
-
         resultArea.setText("");
 
-        resultArea.append("TECHNICIAN SOLAR REPORT\n");
-        resultArea.append("=======================\n\n");
+        resultArea.append("TECHNICIAN SOLAR ASSESSMENT REPORT\n");
+        resultArea.append("=================================\n\n");
 
-        resultArea.append("User ID: " + r.getUserId() + "\n");
-        resultArea.append("Date: " + r.getDateTime() + "\n");
-        resultArea.append("Town: " + r.getTown() + "\n\n");
+        resultArea.append("User ID        : " + r.getUserId() + "\n");
+        resultArea.append("Assessment Date: " + r.getDateTime() + "\n");
+        resultArea.append("Town Reference : " + r.getTown() + "\n\n");
 
-        resultArea.append("Roof Area: " + r.getRoofArea() + " m²\n");
-        resultArea.append("Usable Area: " + r.getUsableArea() + " m²\n\n");
+        resultArea.append("ROOF GEOMETRY\n");
+        resultArea.append("--------------\n");
+        resultArea.append("Roof Length (L) = " + r.getRoofLength() + " m\n");
+        resultArea.append("Roof Width  (W) = " + r.getRoofWidth() + " m\n");
+        resultArea.append("Roof Area = L × W\n");
+        resultArea.append("Roof Area = " +
+                r.getRoofLength() + " × " +
+                r.getRoofWidth() + " = " +
+                r.getRoofArea() + " m²\n\n");
 
-        resultArea.append("Daily Demand: " + r.getDailyKWh() + " kWh\n");
-        resultArea.append("Sun Hours Used: " + r.getSunHours() + " h\n\n");
+        resultArea.append("SHADING & USABLE AREA\n");
+        resultArea.append("----------------------\n");
+        resultArea.append("Shading Level (1–10): " + r.getShadingLevel() + "\n");
+        resultArea.append("Shading Loss = ShadingLevel × 0.05\n");
+        resultArea.append("Usable Area = Roof Area × (1 − Shading Loss)\n");
+        resultArea.append("Usable Area = " + r.getUsableArea() + " m²\n\n");
 
-        resultArea.append("Panel Wattage: " + r.getPanelWatt() + " W\n");
-        resultArea.append("Required Panels: " + r.getRequiredPanels() + "\n");
-        resultArea.append("Recommended Panels: " + r.getRecommendedPanels() + "\n");
+        resultArea.append("ENERGY DEMAND & SOLAR RESOURCE\n");
+        resultArea.append("-------------------------------\n");
+        resultArea.append("Daily Energy Demand = " + r.getDailyKWh() + " kWh/day\n");
+        resultArea.append("Average Sun Hours   = " + r.getSunHours() + " h/day\n\n");
+
+        resultArea.append("PANEL SELECTION\n");
+        resultArea.append("----------------\n");
+        resultArea.append("Selected Panel Rating = " + r.getPanelWatt() + " W\n\n");
+
+        resultArea.append("PANEL ENERGY CALCULATION\n");
+        resultArea.append("-------------------------\n");
+        resultArea.append("Energy per Panel (kWh/day) =\n");
+        resultArea.append("(PanelWatt ÷ 1000) × SunHours × SystemEfficiency\n");
+        resultArea.append("System Efficiency Assumed = 0.75\n");
+        resultArea.append("Energy per Panel = (" +
+                r.getPanelWatt() + " ÷ 1000) × " +
+                r.getSunHours() + " × 0.75\n\n");
+
+        resultArea.append("PANEL COUNT ESTIMATION\n");
+        resultArea.append("----------------------\n");
+        resultArea.append("Required Panels = DailyDemand ÷ Energy per Panel\n");
+        resultArea.append("Required Panels (theoretical) = " +
+                r.getRequiredPanels() + "\n\n");
+
+        resultArea.append("ROOF CONSTRAINT CHECK\n");
+        resultArea.append("----------------------\n");
+        resultArea.append("Max Panels by Roof Area = " +
+                r.getMaxPanelsByRoof() + "\n");
+        resultArea.append("Recommended Panels = min(Required, Max)\n");
+        resultArea.append("Final Recommended Panels = " +
+                r.getRecommendedPanels() + "\n");
     }
 
     private void refreshRecordList() {

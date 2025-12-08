@@ -129,7 +129,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
                     TownSolar townObj = getTownSolar(town);
                     if (townObj != null) {
                         townObj.addRecord(r);
-                    }
+                }
 
                 }
             }

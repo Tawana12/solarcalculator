@@ -16,6 +16,7 @@ public class HomeownerPage extends JFrame {
     private JTextField widthField;
     private JTextField demandField;
     private JComboBox<Integer> shadingBox;
+    private JComboBox<String> panelBox;
 
     private JTextArea resultArea;
     private JComboBox<HomeownerRecord> recordBox;
@@ -74,7 +75,13 @@ public class HomeownerPage extends JFrame {
         for (int i = 1; i <= 10; i++) shadingBox.addItem(i);
         formPanel.add(shadingBox, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+        gbc.gridx = 0; gbc.gridy = 4;
+        formPanel.add(new JLabel("Panel Type:"), gbc);
+        gbc.gridx = 1;
+        panelBox = new JComboBox<>(system.getAllPanelNames());
+        formPanel.add(panelBox, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
         JButton calculateBtn = new JButton("Calculate");
         formPanel.add(calculateBtn, gbc);
 
@@ -103,24 +110,14 @@ public class HomeownerPage extends JFrame {
                         list, value, index, isSelected, cellHasFocus);
 
                 if (value instanceof HomeownerRecord) {
-
-                    int displayIndex;
-
-                    if (index >= 0) {
-                        // Dropdown list
-                        displayIndex = index + 1;
-                    } else {
-                        // Selected item (combo box collapsed)
-                        displayIndex = recordBox.getSelectedIndex() + 1;
-                    }
-
+                    int displayIndex = index >= 0
+                            ? index + 1
+                            : recordBox.getSelectedIndex() + 1;
                     setText("Record " + displayIndex);
                 }
-
                 return this;
             }
         });
-
 
         recordBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
         refreshRecordList();
@@ -195,7 +192,15 @@ public class HomeownerPage extends JFrame {
             double demand = Double.parseDouble(demandField.getText().trim());
             int shading = (int) shadingBox.getSelectedItem();
 
-            PanelSpec panel = system.getPanels().get(0);
+            String panelName = panelBox.getSelectedItem().toString();
+            double panelWatt = 0;
+
+            for (PanelSpec p : system.getPanels()) {
+                if (p.getName().equalsIgnoreCase(panelName)) {
+                    panelWatt = p.getWattage();
+                    break;
+                }
+            }
 
             lastRecord = system.calculateHomeownerSystem(
                     user,
@@ -204,7 +209,7 @@ public class HomeownerPage extends JFrame {
                     shading,
                     demand,
                     user.getTown(),
-                    panel.getWattage()
+                    panelWatt
             );
 
             system.saveToFile("data/records.txt");
@@ -288,5 +293,4 @@ public class HomeownerPage extends JFrame {
             JOptionPane.showMessageDialog(this, "PDF export failed");
         }
     }
-    
 }
