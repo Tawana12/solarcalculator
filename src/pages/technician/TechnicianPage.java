@@ -271,7 +271,7 @@ public class TechnicianPage extends JFrame {
         resultArea.append("PANEL ENERGY CALCULATION\n");
         resultArea.append("-------------------------\n");
         resultArea.append("Energy per Panel (kWh/day) =\n");
-        resultArea.append("(PanelWatt ÷ 1000) × SunHours × SystemEfficiency\n");
+        resultArea.append("(PanelWatt / 1000) × SunHours × SystemEfficiency\n");
         resultArea.append("System Efficiency Assumed = 0.75\n");
         resultArea.append("Energy per Panel = (" +
                 r.getPanelWatt() + " ÷ 1000) × " +

@@ -52,16 +52,7 @@ public class AdminAuthPage extends JFrame {
             if (system.isValidAdminCode(code)) {
 
                 Object[] options = {"Admin Login", "Admin Sign Up"};
-                int choice = JOptionPane.showOptionDialog(
-                        this,
-                        "Admin access verified",
-                        "Admin Options",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.INFORMATION_MESSAGE,
-                        null,
-                        options,
-                        options[0]
-                );
+                int choice = JOptionPane.showOptionDialog(this,"Admin access verified","Admin Options",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,null,options,options[0]);
 
                 if (choice == 0)
                     new AdminLoginPage(system);

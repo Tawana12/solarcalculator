@@ -140,14 +140,7 @@ public class SignUpPage extends JFrame {
             return;
         }
 
-        system.addUser(
-                name,
-                email,
-                phone,
-                town,
-                role,
-                password
-        );
+        system.addUser(name,email,phone,town,role,password);
 
         try {
             system.saveToFile("data/users.txt");

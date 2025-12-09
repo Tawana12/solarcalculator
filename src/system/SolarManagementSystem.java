@@ -20,9 +20,6 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
     private static final String DEFAULT_ADMIN_CODE = "12345678";
     private String adminCodeHash;
 
-
-
-
     Scanner scanner = new Scanner(System.in);
 
     public SolarManagementSystem() {
@@ -66,18 +63,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
 
                 if (filename.endsWith("users.txt")) {
                     int id = Integer.parseInt(parts[0]);
-                    users.put(
-                            id,
-                            new User(
-                                    id,
-                                    parts[1],
-                                    parts[2],
-                                    parts[3],
-                                    parts[4],
-                                    UserType.valueOf(parts[5]),
-                                    parts[6]
-                            )
-                    );
+                    users.put(id,new User(id,parts[1],parts[2],parts[3],parts[4],UserType.valueOf(parts[5]),parts[6]));
                     nextUserId = Math.max(nextUserId, id + 1);
                 }
 
@@ -109,22 +95,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
                     int maxPanelsByRoof = Integer.parseInt(parts[index++]);
                     int recommendedPanels = Integer.parseInt(parts[index++]);
                     
-                    HomeownerRecord r = new HomeownerRecord(
-                            userId,
-                            dt,
-                            town,
-                            roofLength,
-                            roofWidth,
-                            roofArea,
-                            shadingLevel,
-                            usableArea,
-                            dailyKWh,
-                            sunHours,
-                            panelWatt,
-                            requiredPanels,
-                            maxPanelsByRoof,
-                            recommendedPanels
-                    );
+                    HomeownerRecord r = new HomeownerRecord(userId,dt,town,roofLength,roofWidth,roofArea,shadingLevel,usableArea,dailyKWh,sunHours,panelWatt,requiredPanels,maxPanelsByRoof,recommendedPanels);
                     records.add(r);
                     TownSolar townObj = getTownSolar(town);
                     if (townObj != null) {
@@ -136,16 +107,11 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         }
     }
 
-    public void addUser(String name, String email, String phone,
-                        String town, UserType type, String password) {
+    public void addUser(String name, String email, String phone,String town, UserType type, String password) {
 
         String hashedPassword = hashPassword(password);
 
-        users.put(
-                nextUserId,
-                new User(nextUserId, name, email, phone, town, type, hashedPassword)
-        );
-
+        users.put(nextUserId,new User(nextUserId, name, email, phone, town, type, hashedPassword));
         nextUserId++;
     }
 
@@ -250,13 +216,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         return towns.get(townName.toLowerCase());
     }
 
-    public HomeownerRecord calculateHomeownerSystem(User user,
-                                                    double roofLength,
-                                                    double roofWidth,
-                                                    int shadingLevel,
-                                                    double dailyKWh,
-                                                    String townName,
-                                                    double panelWatt) {
+    public HomeownerRecord calculateHomeownerSystem(User user,double roofLength,double roofWidth,int shadingLevel,double dailyKWh,String townName,double panelWatt) {
 
         double roofArea = roofLength * roofWidth;
 
@@ -284,29 +244,13 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
             recommendedPanels = maxPanelsByRoof;
         }
 
-        HomeownerRecord record = new HomeownerRecord(
-                user.getId(),
-                LocalDateTime.now(),
-                townName,
-                roofLength,
-                roofWidth,
-                roofArea,
-                shadingLevel,
-                usableArea,
-                dailyKWh,
-                sunHours,
-                panelWatt,
-                requiredPanels,
-                maxPanelsByRoof,
-                recommendedPanels
-        );
+        HomeownerRecord record = new HomeownerRecord(user.getId(),LocalDateTime.now(),townName,roofLength,roofWidth,roofArea,shadingLevel,usableArea,dailyKWh,sunHours,panelWatt,requiredPanels,maxPanelsByRoof,recommendedPanels);
 
         records.add(record);
         TownSolar town = getTownSolar(townName);
         if (town != null) {
             town.addRecord(record);
         }
-
 
         return record;
     }
@@ -428,18 +372,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         User user = users.get(userId);
         if (user == null) return false;
 
-        users.put(
-                userId,
-                new User(
-                        user.getId(),
-                        user.toString().split(",")[1],
-                        user.getEmail(),
-                        user.toString().split(",")[3],
-                        user.toString().split(",")[4],
-                        user.getType(),
-                        hashPassword(newPassword)
-                )
-        );
+        users.put(userId,new User(user.getId(),user.toString().split(",")[1],user.getEmail(),user.toString().split(",")[3],user.toString().split(",")[4],user.getType(),hashPassword(newPassword)));
         return true;
     }
     private void loadAdminCode() {

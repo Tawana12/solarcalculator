@@ -19,21 +19,7 @@ public class HomeownerRecord {
     private int maxPanelsByRoof;
     private int recommendedPanels;
 
-    public HomeownerRecord(int userId,
-                           LocalDateTime dateTime,
-                           String town,
-                           double roofLength,
-                           double roofWidth,
-                           double roofArea,
-                           int shadingLevel,
-                           double usableArea,
-                           double dailyKWh,
-                           double sunHours,
-                           double panelWatt,
-                           int requiredPanels,
-                           int maxPanelsByRoof,
-                           int recommendedPanels) {
-
+    public HomeownerRecord(int userId,LocalDateTime dateTime,String town,double roofLength,double roofWidth,double roofArea,int shadingLevel,double usableArea,double dailyKWh,double sunHours,double panelWatt,int requiredPanels,int maxPanelsByRoof,int recommendedPanels) {
         this.userId = userId;
         this.dateTime = dateTime;
         this.town = town;
@@ -106,32 +92,16 @@ public class HomeownerRecord {
         return recommendedPanels;
     }
 
-    // CSV for saving to file
+    // csv format for saving to file
     @Override
     public String toString() {
-        return userId + "," +
-            dateTime + "," +
-            town + "," +
-            roofLength + "," +
-            roofWidth + "," +
-            roofArea + "," +
-            shadingLevel + "," +
-            usableArea + "," +
-            dailyKWh + "," +
-            sunHours + "," +
-            panelWatt + "," +
-            requiredPanels + "," +
-            maxPanelsByRoof + "," +
-            recommendedPanels;
+        return userId + "," +dateTime + "," +town + "," +roofLength + "," +roofWidth + "," +roofArea + "," +shadingLevel + "," +usableArea + "," +dailyKWh + "," +sunHours + "," +panelWatt + "," +requiredPanels + "," +maxPanelsByRoof + "," +recommendedPanels;
     }
 
 
     // Label for dropdown
     public String toLabel() {
-        return dateTime.toLocalDate() + " | " +
-            town + " | " +
-            recommendedPanels + " panels (" +
-            (int) panelWatt + "W)";
+        return dateTime.toLocalDate() + " | " +town + " | " +recommendedPanels + " panels (" +(int) panelWatt + "W)";
     }
 
     

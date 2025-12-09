@@ -100,14 +100,7 @@ public class AdminSignUpPage extends JFrame {
                 return;
             }
 
-            system.addUser(
-                    name,
-                    email,
-                    phone,
-                    townBox.getSelectedItem().toString(),
-                    UserType.ADMIN,
-                    password
-            );
+            system.addUser(name,email,phone,townBox.getSelectedItem().toString(),UserType.ADMIN,password);
 
             try {
                 system.saveToFile("data/users.txt");
