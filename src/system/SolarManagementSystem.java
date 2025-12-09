@@ -114,7 +114,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         users.put(nextUserId,new User(nextUserId, name, email, phone, town, type, hashedPassword));
         nextUserId++;
     }
-
+    // Adapted from: https://www.geeksforgeeks.org/java/sha-256-hash-in-java/
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");

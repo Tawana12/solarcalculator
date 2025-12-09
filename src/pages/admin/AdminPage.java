@@ -80,7 +80,7 @@ public class AdminPage extends JFrame {
             townBox.setEnabled(true);
         });
 
-        // ================= PANEL SPECIFICATIONS =================
+        // Pnel spcification
         JPanel panelSpecPanel = createSectionPanel("Solar Panel Specifications");
 
         JRadioButton addPanelRadio = new JRadioButton("Add new panel", true);
@@ -120,7 +120,7 @@ public class AdminPage extends JFrame {
             panelBox.setEnabled(true);
         });
 
-        // ================= RESET USER =================
+        // reset user
         JPanel resetPanel = createSectionPanel("Reset User Account");
 
         JTextField userIdField = new JTextField(15);
@@ -134,7 +134,7 @@ public class AdminPage extends JFrame {
         centerPanel.add(resetPanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        // ================= TOWN STATISTICS =================
+        // town stats
         JPanel statsPanel = createSectionPanel("Town Statistics");
 
         JComboBox<String> statsTownBox = new JComboBox<>(system.getAllTownNames());
@@ -166,7 +166,7 @@ public class AdminPage extends JFrame {
 
         mainPanel.add(southPanel, BorderLayout.SOUTH);
 
-        // ================= ACTIONS =================
+        // actns
         updateCodeBtn.addActionListener(e -> {
             String newCode = new String(adminCodeField.getPassword());
             if (newCode.length() < 6) return;
