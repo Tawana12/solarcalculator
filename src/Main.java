@@ -19,7 +19,6 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Starting with empty data");
         }
-
         new LoginPage(system);
     }
 }

@@ -118,10 +118,7 @@ public class TechnicianPage extends JFrame {
                         list, value, index, isSelected, cellHasFocus);
 
                 if (value instanceof HomeownerRecord) {
-                    int displayIndex =
-                            (index >= 0)
-                                    ? index + 1
-                                    : recordBox.getSelectedIndex() + 1;
+                    int displayIndex =(index >= 0)? index + 1: recordBox.getSelectedIndex() + 1;
                     setText("Record " + displayIndex);
                 }
                 return this;
@@ -134,15 +131,12 @@ public class TechnicianPage extends JFrame {
         JButton viewBtn = new JButton("View");
         JButton deleteBtn = new JButton("Delete");
         JButton saveBtn = new JButton("Save TXT");
-        JButton pdfBtn = new JButton("Export PDF");
         JButton backBtn = new JButton("Back");
 
         buttonRow.add(viewBtn);
         buttonRow.add(deleteBtn);
         buttonRow.add(saveBtn);
-        buttonRow.add(pdfBtn);
         buttonRow.add(backBtn);
-
         bottomPanel.add(recordBox);
         bottomPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         bottomPanel.add(buttonRow);
@@ -182,7 +176,6 @@ public class TechnicianPage extends JFrame {
         });
 
         saveBtn.addActionListener(e -> saveTxtReport());
-        pdfBtn.addActionListener(e -> exportPdfReport());
 
         backBtn.addActionListener(e -> {
             new LoginPage(system);
@@ -213,15 +206,7 @@ public class TechnicianPage extends JFrame {
 
             int shadingLevel = (int) Math.min(10, Math.max(1, shadingLoss * 10));
 
-            lastRecord = system.calculateHomeownerSystem(
-                    user,
-                    length,
-                    width,
-                    shadingLevel,
-                    demand,
-                    townBox.getSelectedItem().toString(),
-                    panelWatt
-            );
+            lastRecord = system.calculateHomeownerSystem(user,length,width,shadingLevel,demand,townBox.getSelectedItem().toString(),panelWatt);
 
             system.saveToFile("data/records.txt");
             refreshRecordList();
@@ -320,24 +305,5 @@ public class TechnicianPage extends JFrame {
         }
     }
 
-    private void exportPdfReport() {
-
-        if (lastRecord == null) {
-            JOptionPane.showMessageDialog(this, "Select or calculate a record");
-            return;
-        }
-
-        try {
-            String filename = "reports/technician_report_user_" +
-                    lastRecord.getUserId() + "_" +
-                    lastRecord.getDateTime().toString().replace(":", "-") +
-                    ".pdf";
-
-            system.exportRecordToPDF(lastRecord, filename);
-            JOptionPane.showMessageDialog(this, "PDF exported");
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "PDF export failed");
-        }
-    }
+  
 }

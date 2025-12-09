@@ -3,7 +3,6 @@ package pages.homeowner;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
-
 import pages.auth.LoginPage;
 import system.*;
 
@@ -126,13 +125,11 @@ public class HomeownerPage extends JFrame {
         JButton viewBtn = new JButton("View");
         JButton deleteBtn = new JButton("Delete");
         JButton saveBtn = new JButton("Save TXT");
-        JButton pdfBtn = new JButton("Export PDF");
         JButton backBtn = new JButton("Back");
 
         buttonRow.add(viewBtn);
         buttonRow.add(deleteBtn);
         buttonRow.add(saveBtn);
-        buttonRow.add(pdfBtn);
         buttonRow.add(backBtn);
 
         bottomPanel.add(recordBox);
@@ -174,8 +171,6 @@ public class HomeownerPage extends JFrame {
         });
 
         saveBtn.addActionListener(e -> saveTxtReport());
-        pdfBtn.addActionListener(e -> exportPdfReport());
-
         backBtn.addActionListener(e -> {
             new LoginPage(system);
             dispose();
@@ -202,16 +197,7 @@ public class HomeownerPage extends JFrame {
                 }
             }
 
-            lastRecord = system.calculateHomeownerSystem(
-                    user,
-                    length,
-                    width,
-                    shading,
-                    demand,
-                    user.getTown(),
-                    panelWatt
-            );
-
+            lastRecord = system.calculateHomeownerSystem(user,length,width,shading,demand,user.getTown(),panelWatt);
             system.saveToFile("data/records.txt");
             refreshRecordList();
             displayResult(lastRecord);
@@ -273,24 +259,5 @@ public class HomeownerPage extends JFrame {
         }
     }
 
-    private void exportPdfReport() {
-
-        if (lastRecord == null) {
-            JOptionPane.showMessageDialog(this, "Please calculate or select a record");
-            return;
-        }
-
-        try {
-            String filename = "reports/homeowner_report_user_" +
-                    lastRecord.getUserId() + "_" +
-                    lastRecord.getDateTime().toString().replace(":", "-") +
-                    ".pdf";
-
-            system.exportRecordToPDF(lastRecord, filename);
-            JOptionPane.showMessageDialog(this, "PDF exported");
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "PDF export failed");
-        }
-    }
+    
 }

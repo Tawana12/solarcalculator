@@ -319,45 +319,7 @@ public class SolarManagementSystem implements FileOperations, ReportGenerator {
         removeRecord(record);
         return true;
     }
-    public void exportRecordToPDF(HomeownerRecord record, String filename) throws Exception {
 
-        String content =
-                "Solar Recommendation Report\n\n" +
-                "User ID: " + record.getUserId() + "\n" +
-                "Date: " + record.getDateTime() + "\n" +
-                "Town: " + record.getTown() + "\n\n" +
-
-                "Roof Area: " + record.getRoofArea() + " m^2\n" +
-                "Usable Area: " + record.getUsableArea() + " m^2\n" +
-                "Shading Level: " + record.getShadingLevel() + "\n\n" +
-
-                "Daily Energy Demand: " + record.getDailyKWh() + " kWh\n" +
-                "Sun Hours: " + record.getSunHours() + "\n\n" +
-
-                "Panel Wattage: " + record.getPanelWatt() + " W\n" +
-                "Required Panels: " + record.getRequiredPanels() + "\n" +
-                "Recommended Panels: " + record.getRecommendedPanels();
-
-        String pdf =
-                "%PDF-1.4\n" +
-                "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n" +
-                "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n" +
-                "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R >>\nendobj\n" +
-                "4 0 obj\n<< /Length 5 0 R >>\nstream\n" +
-                "BT\n/F1 12 Tf\n72 720 Td\n(" +
-                content.replace("\\", "\\\\")
-                    .replace("(", "\\(")
-                    .replace(")", "\\)")
-                    .replace("\n", ") Tj\n0 -16 Td\n(")
-                + ") Tj\nET\nendstream\nendobj\n" +
-                "5 0 obj\n" + content.length() + "\nendobj\n" +
-                "xref\n0 6\n0000000000 65535 f \n" +
-                "trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n0\n%%EOF";
-
-        FileWriter writer = new FileWriter(filename);
-        writer.write(pdf);
-        writer.close();
-    }
     
     public void resetNonAdminUsers() {
         users.entrySet().removeIf(entry ->
