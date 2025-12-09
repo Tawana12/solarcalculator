@@ -1,6 +1,6 @@
 package system;
 
-public class User {
+public class User extends Person {
 
     private int id;
     private String name;
@@ -10,9 +10,8 @@ public class User {
     private UserType type;
     private String passwordHash;   
 
-    public User(int id, String name, String email, String phone,
-                String town, UserType type, String passwordHash) {
-
+    public User(int id, String name, String email, String phone,String town, UserType type, String passwordHash) {
+        super(name, email, phone);
         this.id = id;
         this.name = name;
         this.email = email;
@@ -24,18 +23,6 @@ public class User {
 
     public int getId() { 
         return id; 
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
     }
 
     public String getTown() {

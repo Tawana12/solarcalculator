@@ -105,8 +105,7 @@ public class LoginPage extends JFrame {
 
         southPanel.add(Box.createRigidArea(new Dimension(0, 12)));
 
-        JLabel signUpLabel =
-                new JLabel("<html>Don't have an account? <a href=''>Sign up</a></html>");
+        JLabel signUpLabel = new JLabel("<html>Don't have an account? <a href=''>Sign up</a></html>");
         signUpLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         signUpLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         signUpLabel.addMouseListener(new MouseAdapter() {

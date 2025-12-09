@@ -6,7 +6,6 @@ public class Main {
 
 
         SolarManagementSystem system = new SolarManagementSystem();
-        System.out.println(System.getProperty("user.dir"));
 
         try {
             system.loadFromFile("data/users.txt");
