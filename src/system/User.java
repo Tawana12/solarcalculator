@@ -3,9 +3,6 @@ package system;
 public class User extends Person {
 
     private int id;
-    private String name;
-    private String email;
-    private String phone;
     private String town;
     private UserType type;
     private String passwordHash;   
@@ -13,9 +10,6 @@ public class User extends Person {
     public User(int id, String name, String email, String phone,String town, UserType type, String passwordHash) {
         super(name, email, phone);
         this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
         this.town = town;
         this.type = type;
         this.passwordHash = passwordHash;
