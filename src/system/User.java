@@ -33,7 +33,7 @@ public class User extends Person {
 
     @Override
     public String toString() {
-        return id + "," + name + "," + email + "," + phone + ","
+        return id + "," + super.getName() + "," + super.getEmail() + "," + super.getPhone() + ","
                 + town + "," + type + "," + passwordHash;
     }
 }
